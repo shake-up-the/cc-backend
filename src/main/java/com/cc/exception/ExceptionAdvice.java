@@ -58,4 +58,11 @@ public class ExceptionAdvice {
         log.info("e = {}", e.getMessage());
         return Response.failure(-1006, "비밀번호 형식이 올바르지 않습니다.");
     }
+
+    @ExceptionHandler(FailedToSendEmailException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Response failedToSendEmailException(FailedToSendEmailException e) {
+        log.info("e = {}", e.getMessage());
+        return Response.failure(-1007, "이메일 전송에 실패하였습니다.");
+    }
 }

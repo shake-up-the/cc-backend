@@ -30,9 +30,6 @@ public class MemberService {
 
     @Transactional
     public void signup(String customId, String email, String password, String name, String phone, Gender gender, String birth) {
-        checkDuplicateCustomId(customId);
-        checkDuplicateEmail(email);
-        checkDuplicatePhone(phone);
 
         memberRepository.save(Member.builder()
                 .customId(customId)
