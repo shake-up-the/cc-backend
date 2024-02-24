@@ -65,4 +65,18 @@ public class ExceptionAdvice {
         log.info("e = {}", e.getMessage());
         return Response.failure(-1007, "이메일 전송에 실패하였습니다.");
     }
+
+    @ExceptionHandler(ExpiredVerifyCodeException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response expiredVerifyCodeException(ExpiredVerifyCodeException e) {
+        log.info("e = {}", e.getMessage());
+        return Response.failure(-1008, "인증코드가 만료되었습니다.");
+    }
+
+    @ExceptionHandler(WrongVerifyCodeException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response wrongVerifyCodeException(WrongVerifyCodeException e) {
+        log.info("e = {}", e.getMessage());
+        return Response.failure(-1009, "인증코드가 일치하지 않습니다.");
+    }
 }

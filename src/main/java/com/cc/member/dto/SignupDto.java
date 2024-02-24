@@ -32,10 +32,12 @@ public record SignupDto (
         @Pattern(regexp = "^(02|\\d{3})(\\d{4}|\\d{3})(\\d{4})$")
         String phone,
 
-        @Schema(description = "성별", example = "M", allowableValues = {"M", "F"})
+        @Schema(description = "성별", example = "M")
+        @NotBlank
         Gender gender,
 
         @Schema(description = "생년월일", example = "19990101")
+        @NotBlank
         @Size(min = 8, max = 8)
         String birth
 ) {

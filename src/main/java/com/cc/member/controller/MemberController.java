@@ -1,8 +1,9 @@
 package com.cc.member.controller;
 
 import com.cc.auth.TokenInfo;
+import com.cc.member.dto.CheckEmailCodeDto;
 import com.cc.member.dto.LoginDto;
-import com.cc.member.dto.SignupCodeDto;
+import com.cc.member.dto.SignupEmailCodeDto;
 import com.cc.member.dto.SignupDto;
 import com.cc.member.service.EmailVerifyService;
 import com.cc.member.service.MemberService;
@@ -45,12 +46,21 @@ public class MemberController {
     }
 
     @Operation(summary = "회원가입 이메일 인증 코드 전송")
-    @PostMapping("/signup-code")
+    @PostMapping("/signup-email-code")
     @ResponseStatus(HttpStatus.OK)
-    public Response signupCode(@Valid @RequestBody SignupCodeDto signupCodeDto) {
-        memberService.checkDuplicateEmail(signupCodeDto.email());
-        emailVerifyService.sendVerifyCode(signupCodeDto.email());
+    public Response signupEmailCode(@Valid @RequestBody SignupEmailCodeDto signupEmailCodeDto) {
+        memberService.checkDuplicateEmail(signupEmailCodeDto.email());
+        emailVerifyService.sendVerifyCode(signupEmailCodeDto.email());
 
         return Response.success();
+    }
+
+    @Operation(summary = "이메일 인증 코드 확인")
+    @PostMapping("/check-email-code")
+    @ResponseStatus(HttpStatus.OK)
+    public Response checkCode(@Valid @RequestBody CheckEmailCodeDto checkEmailCodeDto) {
+        String deviceId = emailVerifyService.checkVerifyCode(checkEmailCodeDto.email(), checkEmailCodeDto.code());
+
+        return Response.success(deviceId);
     }
 }
