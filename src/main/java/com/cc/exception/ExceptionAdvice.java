@@ -16,4 +16,18 @@ public class ExceptionAdvice {
         log.info("e = {}", e.getMessage());
         return Response.failure(-1000, "오류가 발생하였습니다.");
     }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Response invalidTokenException(InvalidTokenException e) {
+        log.info("e = {}", e.getMessage());
+        return Response.failure(-1001, "유효하지 않은 토큰입니다.");
+    }
+
+    @ExceptionHandler(MemberNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response memberNotFoundException(MemberNotFoundException e) {
+        log.info("e = {}", e.getMessage());
+        return Response.failure(-1002, "사용자를 찾을 수 없습니다.");
+    }
 }

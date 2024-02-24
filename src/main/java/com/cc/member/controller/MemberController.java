@@ -1,6 +1,8 @@
 package com.cc.member.controller;
 
 
+import com.cc.auth.TokenInfo;
+import com.cc.member.dto.LoginDto;
 import com.cc.member.dto.SignupDto;
 import com.cc.member.service.MemberService;
 import com.cc.response.Response;
@@ -25,5 +27,12 @@ public class MemberController {
         memberService.signup(signupDto.email(), signupDto.password(), signupDto.name(), signupDto.phone(), signupDto.gender(), signupDto.birth());
 
         return Response.success();
+    }
+
+    @PostMapping("/login")
+    public Response login(@RequestBody LoginDto loginDto) {
+        TokenInfo tokenInfo = memberService.login(loginDto.email(), loginDto.password());
+
+        return Response.success(tokenInfo);
     }
 }

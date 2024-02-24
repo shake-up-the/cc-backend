@@ -50,8 +50,6 @@ public class Member implements UserDetails {
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
-    private String refreshToken;
-
     @CreationTimestamp
     private LocalDateTime createdAt;
 
