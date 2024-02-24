@@ -28,6 +28,9 @@ public class Member implements UserDetails {
     @Column(name = "member_id")
     private Long id;
 
+    @Column(nullable = false, unique = true, length = 30)
+    private String customId;
+
     @Column(nullable = false, unique = true, length = 50)
     private String email;
 
@@ -65,7 +68,7 @@ public class Member implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return customId;
     }
 
     @Override

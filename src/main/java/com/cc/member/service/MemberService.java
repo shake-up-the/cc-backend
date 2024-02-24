@@ -28,8 +28,9 @@ public class MemberService {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
-    public void signup(String email, String password, String name, String phone, String gender, String birth) {
+    public void signup(String customId, String email, String password, String name, String phone, String gender, String birth) {
         memberRepository.save(Member.builder()
+                .customId(customId)
                 .email(email)
                 .password(passwordEncoder.encode(password))
                 .name(name)
@@ -40,9 +41,9 @@ public class MemberService {
                 .build());
     }
 
-    public TokenInfo login(String email, String password) {
+    public TokenInfo login(String customId, String password) {
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(email, password);
+                new UsernamePasswordAuthenticationToken(customId, password);
 
         Authentication authentication =
                 authenticationManagerBuilder
@@ -50,10 +51,10 @@ public class MemberService {
                         .authenticate(authenticationToken);
 
         TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
-        Member member = memberRepository.findByEmail(email)
+        Member member = memberRepository.findByCustomId(customId)
                 .orElseThrow(MemberNotFoundException::new);
 
-        redisTemplate.opsForValue().set("refresh-token:" + member.getEmail(), tokenInfo.refreshToken(), 14, TimeUnit.DAYS);
+        redisTemplate.opsForValue().set("refresh-token:" + member.getCustomId(), tokenInfo.refreshToken(), 14, TimeUnit.DAYS);
 
         return tokenInfo;
     }

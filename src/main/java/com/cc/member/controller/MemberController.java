@@ -24,14 +24,14 @@ public class MemberController {
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
     public Response signup(@RequestBody SignupDto signupDto) {
-        memberService.signup(signupDto.email(), signupDto.password(), signupDto.name(), signupDto.phone(), signupDto.gender(), signupDto.birth());
+        memberService.signup(signupDto.customId(), signupDto.email(), signupDto.password(), signupDto.name(), signupDto.phone(), signupDto.gender(), signupDto.birth());
 
         return Response.success();
     }
 
     @PostMapping("/login")
     public Response login(@RequestBody LoginDto loginDto) {
-        TokenInfo tokenInfo = memberService.login(loginDto.email(), loginDto.password());
+        TokenInfo tokenInfo = memberService.login(loginDto.customId(), loginDto.password());
 
         return Response.success(tokenInfo);
     }

@@ -17,15 +17,15 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return memberRepository.findByEmail(email)
+    public UserDetails loadUserByUsername(String customId) throws UsernameNotFoundException {
+        return memberRepository.findByCustomId(customId)
                 .map(this::createUserDetails)
                 .orElseThrow(MemberNotFoundException::new);
     }
 
     private UserDetails createUserDetails(Member member) {
         return User.builder()
-                .username(member.getEmail())
+                .username(member.getCustomId())
                 .password(member.getPassword())
                 .roles(member.getRoles().toArray(new String[0]))
                 .build();
