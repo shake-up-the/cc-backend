@@ -2,7 +2,8 @@ package com.cc.member.service;
 
 import com.cc.auth.JwtTokenProvider;
 import com.cc.auth.TokenInfo;
-import com.cc.exception.MemberNotFoundException;
+import com.cc.exception.*;
+import com.cc.member.domain.Gender;
 import com.cc.member.domain.Member;
 import com.cc.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
@@ -28,7 +29,11 @@ public class MemberService {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
-    public void signup(String customId, String email, String password, String name, String phone, String gender, String birth) {
+    public void signup(String customId, String email, String password, String name, String phone, Gender gender, String birth) {
+        checkDuplicateCustomId(customId);
+        checkDuplicateEmail(email);
+        checkDuplicatePhone(phone);
+
         memberRepository.save(Member.builder()
                 .customId(customId)
                 .email(email)
@@ -57,5 +62,23 @@ public class MemberService {
         redisTemplate.opsForValue().set("refresh-token:" + member.getCustomId(), tokenInfo.refreshToken(), 14, TimeUnit.DAYS);
 
         return tokenInfo;
+    }
+
+    public void checkDuplicateCustomId(String customId) {
+        if (memberRepository.existsByCustomId(customId)) {
+            throw new MemberCustomIdAlreadyExistsException();
+        }
+    }
+
+    public void checkDuplicateEmail(String email) {
+        if (memberRepository.existsByEmail(email)) {
+            throw new MemberEmailAlreadyExistsException();
+        }
+    }
+
+    public void checkDuplicatePhone(String phone) {
+        if (memberRepository.existsByPhone(phone)) {
+            throw new MemberPhoneAlreadyExistsException();
+        }
     }
 }

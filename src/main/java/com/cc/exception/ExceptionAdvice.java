@@ -30,4 +30,32 @@ public class ExceptionAdvice {
         log.info("e = {}", e.getMessage());
         return Response.failure(-1002, "사용자를 찾을 수 없습니다.");
     }
+
+    @ExceptionHandler(MemberCustomIdAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public Response memberCustomIdAlreadyExistsException(MemberCustomIdAlreadyExistsException e) {
+        log.info("e = {}", e.getMessage());
+        return Response.failure(-1003, "이미 사용 중인 아이디입니다.");
+    }
+
+    @ExceptionHandler(MemberEmailAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public Response memberEmailAlreadyExistsException(MemberEmailAlreadyExistsException e) {
+        log.info("e = {}", e.getMessage());
+        return Response.failure(-1004, "이미 사용 중인 이메일입니다.");
+    }
+
+    @ExceptionHandler(MemberPhoneAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public Response memberPhoneAlreadyExistsException(MemberPhoneAlreadyExistsException e) {
+        log.info("e = {}", e.getMessage());
+        return Response.failure(-1005, "이미 사용 중인 전화번호입니다.");
+    }
+
+    @ExceptionHandler(InvalidPasswordFormatException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response invalidPasswordFormatException(InvalidPasswordFormatException e) {
+        log.info("e = {}", e.getMessage());
+        return Response.failure(-1006, "비밀번호 형식이 올바르지 않습니다.");
+    }
 }

@@ -40,11 +40,12 @@ public class Member implements UserDetails {
     @Column(nullable = false, length = 30)
     private String name;
 
-    @Column(nullable = false, length = 11)
+    @Column(nullable = false, unique = true, length = 11)
     private String phone;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 1)
-    private String gender;
+    private Gender gender;
 
     @Column(nullable = false, length = 8)
     private String birth;
