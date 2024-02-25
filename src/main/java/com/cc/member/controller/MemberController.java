@@ -66,4 +66,14 @@ public class MemberController {
 
         return Response.success(deviceId);
     }
+
+    @Operation(summary = "이메일로 아이디 찾기")
+    @PostMapping("/find-id/email")
+    @ResponseStatus(HttpStatus.OK)
+    public Response findIdByEmail(@Valid @RequestBody FindIdByEmailDto findIdByEmailDto) {
+        emailVerifyService.checkEmailVerified(VerifyType.FIND_ID, findIdByEmailDto.email(), findIdByEmailDto.emailDeviceId());
+        String customId = memberService.findCustomIdByEmail(findIdByEmailDto.email(), findIdByEmailDto.name(), findIdByEmailDto.gender(), findIdByEmailDto.birth());
+
+        return Response.success(customId);
+    }
 }

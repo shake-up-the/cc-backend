@@ -86,4 +86,11 @@ public class ExceptionAdvice {
         log.info("e = {}", e.getMessage());
         return Response.failure(-1010, "이메일 인증이 되지 않았습니다.");
     }
+
+    @ExceptionHandler(InvalidMemberInfoException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response invalidMemberInfoException(InvalidMemberInfoException e) {
+        log.info("e = {}", e.getMessage());
+        return Response.failure(-1011, "잘못된 회원 정보입니다.");
+    }
 }

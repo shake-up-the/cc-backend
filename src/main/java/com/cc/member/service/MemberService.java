@@ -78,4 +78,15 @@ public class MemberService {
             throw new MemberPhoneAlreadyExistsException();
         }
     }
+
+    public String findCustomIdByEmail(String email, String name, Gender gender, String birth) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(MemberNotFoundException::new);
+
+        if (!member.getName().equals(name) || !member.getGender().equals(gender) || !member.getBirth().equals(birth)) {
+            throw new InvalidMemberInfoException();
+        }
+
+        return member.getCustomId();
+    }
 }
