@@ -1,6 +1,7 @@
 package com.cc.member.service;
 
 import com.cc.auth.JwtTokenProvider;
+import com.cc.auth.SecurityUtil;
 import com.cc.auth.TokenInfo;
 import com.cc.exception.*;
 import com.cc.member.domain.Gender;
@@ -89,4 +90,20 @@ public class MemberService {
 
         return member.getCustomId();
     }
+
+    @Transactional
+    public String findPasswordByEmail(String email, String name, String customId, Gender gender, String birth) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(MemberNotFoundException::new);
+
+        if (!member.getName().equals(name) || !member.getCustomId().equals(customId) || !member.getGender().equals(gender) || !member.getBirth().equals(birth)) {
+            throw new InvalidMemberInfoException();
+        }
+
+        String password = SecurityUtil.generatePassword(10);
+        member.changePassword(passwordEncoder.encode(password));
+
+        return password;
+    }
+
 }

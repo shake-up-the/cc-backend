@@ -76,4 +76,14 @@ public class MemberController {
 
         return Response.success(customId);
     }
+
+    @Operation(summary = "이메일로 비밀번호 찾기")
+    @PostMapping("/find-password/email")
+    @ResponseStatus(HttpStatus.OK)
+    public Response findPasswordByEmail(@Valid @RequestBody FindPasswordByEmailDto findPasswordByEmailDto) {
+        emailVerifyService.checkEmailVerified(VerifyType.FIND_PASSWORD, findPasswordByEmailDto.email(), findPasswordByEmailDto.emailDeviceId());
+        String password = memberService.findPasswordByEmail(findPasswordByEmailDto.email(), findPasswordByEmailDto.name(), findPasswordByEmailDto.customId(), findPasswordByEmailDto.gender(), findPasswordByEmailDto.birth());
+
+        return Response.success(password);
+    }
 }
