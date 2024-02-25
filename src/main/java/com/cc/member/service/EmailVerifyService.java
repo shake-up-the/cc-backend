@@ -3,6 +3,7 @@ package com.cc.member.service;
 
 import com.cc.exception.ExpiredVerifyCodeException;
 import com.cc.exception.FailedToSendEmailException;
+import com.cc.exception.NotVerifiedEmailException;
 import com.cc.exception.WrongVerifyCodeException;
 import com.cc.member.domain.VerifyType;
 import lombok.RequiredArgsConstructor;
@@ -60,5 +61,12 @@ public class EmailVerifyService {
         redisTemplate.opsForValue().set("verified-at:%s:%s".formatted(type, deviceId), email, 3, TimeUnit.HOURS);
 
         return deviceId;
+    }
+
+    public void checkEmailVerified(VerifyType type, String email, String deviceId) {
+        String verifiedEmail = Optional.ofNullable(redisTemplate.opsForValue().get("verified-at:%s:%s".formatted(type, deviceId))).orElseThrow(NotVerifiedEmailException::new);
+        if (!email.equals(verifiedEmail)) {
+            throw new NotVerifiedEmailException();
+        }
     }
 }

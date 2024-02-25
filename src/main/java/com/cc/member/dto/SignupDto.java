@@ -18,6 +18,10 @@ public record SignupDto (
         @Email
         String email,
 
+        @Schema(description = "이메일 인증 디바이스 ID", example = "abcd1234")
+        @NotBlank
+        String emailDeviceId,
+
         @Schema(description = "비밀번호", example = "qwer1234@")
         @NotBlank
         @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*])[0-9a-zA-Z!@#$%^&*]{8,16}$")

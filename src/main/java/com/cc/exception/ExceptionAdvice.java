@@ -79,4 +79,11 @@ public class ExceptionAdvice {
         log.info("e = {}", e.getMessage());
         return Response.failure(-1009, "인증코드가 일치하지 않습니다.");
     }
+
+    @ExceptionHandler(NotVerifiedEmailException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response notVerifiedEmailException(NotVerifiedEmailException e) {
+        log.info("e = {}", e.getMessage());
+        return Response.failure(-1010, "이메일 인증이 되지 않았습니다.");
+    }
 }

@@ -29,6 +29,7 @@ public class MemberController {
         memberService.checkDuplicateCustomId(signupDto.customId());
         memberService.checkDuplicateEmail(signupDto.email());
         memberService.checkDuplicatePhone(signupDto.phone());
+        emailVerifyService.checkEmailVerified(VerifyType.SIGNUP, signupDto.email(), signupDto.emailDeviceId());
         memberService.signup(signupDto.customId(), signupDto.email(), signupDto.password(), signupDto.name(), signupDto.phone(), signupDto.gender(), signupDto.birth());
 
         return Response.success();
