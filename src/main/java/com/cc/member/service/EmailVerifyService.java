@@ -4,6 +4,7 @@ package com.cc.member.service;
 import com.cc.exception.ExpiredVerifyCodeException;
 import com.cc.exception.FailedToSendEmailException;
 import com.cc.exception.WrongVerifyCodeException;
+import com.cc.member.domain.VerifyType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.MailException;
@@ -23,17 +24,18 @@ public class EmailVerifyService {
     private final JavaMailSender javaMailSender;
     private final RedisTemplate<String, String> redisTemplate;
 
-    public void sendVerifyCode(String email) {
+    public void sendVerifyCode(VerifyType type, String email) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
 
         String verifyCode = generateVerifyCode();
-        redisTemplate.opsForValue().set("verify-code:" + email, verifyCode, 5, TimeUnit.MINUTES);
 
         try {
             mailMessage.setTo(email);
-            mailMessage.setSubject("CC 이메일 인증 코드");
-            mailMessage.setText("인증 코드: " + verifyCode);
+            mailMessage.setSubject("CC %s 인증 코드".formatted(type.getName()));
+            mailMessage.setText("인증 코드: %s".formatted(verifyCode));
             javaMailSender.send(mailMessage);
+
+            redisTemplate.opsForValue().set("verify-code:%s:%s".formatted(type, email), verifyCode, 5, TimeUnit.MINUTES);
         } catch (MailException e) {
             throw new FailedToSendEmailException();
         }
@@ -45,8 +47,8 @@ public class EmailVerifyService {
         return String.format("%04d", randomCode);
     }
 
-    public String checkVerifyCode(String email, String code) {
-        String verifyCode = Optional.ofNullable(redisTemplate.opsForValue().get("verify-code:" + email))
+    public String checkVerifyCode(VerifyType type, String email, String code) {
+        String verifyCode = Optional.ofNullable(redisTemplate.opsForValue().get("verify-code:%s:%s".formatted(type, email)))
                 .orElseThrow(ExpiredVerifyCodeException::new);
 
         if (!code.equals(verifyCode)) {
@@ -55,7 +57,7 @@ public class EmailVerifyService {
 
         UUID uuid = UUID.randomUUID();
         String deviceId = uuid.toString().substring(0, 8);
-        redisTemplate.opsForValue().set("verified-at:" + deviceId, email, 3, TimeUnit.HOURS);
+        redisTemplate.opsForValue().set("verified-at:%s:%s".formatted(type, deviceId), email, 3, TimeUnit.HOURS);
 
         return deviceId;
     }

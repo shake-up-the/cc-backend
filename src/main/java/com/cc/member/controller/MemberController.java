@@ -1,10 +1,8 @@
 package com.cc.member.controller;
 
 import com.cc.auth.TokenInfo;
-import com.cc.member.dto.CheckEmailCodeDto;
-import com.cc.member.dto.LoginDto;
-import com.cc.member.dto.SignupEmailCodeDto;
-import com.cc.member.dto.SignupDto;
+import com.cc.member.domain.VerifyType;
+import com.cc.member.dto.*;
 import com.cc.member.service.EmailVerifyService;
 import com.cc.member.service.MemberService;
 import com.cc.response.Response;
@@ -45,12 +43,15 @@ public class MemberController {
         return Response.success(tokenInfo);
     }
 
-    @Operation(summary = "회원가입 이메일 인증 코드 전송")
-    @PostMapping("/signup-email-code")
+    @Operation(summary = "이메일 인증 코드 전송")
+    @PostMapping("/send-email-code")
     @ResponseStatus(HttpStatus.OK)
-    public Response signupEmailCode(@Valid @RequestBody SignupEmailCodeDto signupEmailCodeDto) {
-        memberService.checkDuplicateEmail(signupEmailCodeDto.email());
-        emailVerifyService.sendVerifyCode(signupEmailCodeDto.email());
+    public Response sendEmailCode(@RequestParam VerifyType type,
+                                    @Valid @RequestBody SendEmailCodeDto sendEmailCodeDto) {
+        if (type == VerifyType.SIGNUP) {
+            memberService.checkDuplicateEmail(sendEmailCodeDto.email());
+        }
+        emailVerifyService.sendVerifyCode(type, sendEmailCodeDto.email());
 
         return Response.success();
     }
@@ -58,8 +59,9 @@ public class MemberController {
     @Operation(summary = "이메일 인증 코드 확인")
     @PostMapping("/check-email-code")
     @ResponseStatus(HttpStatus.OK)
-    public Response checkCode(@Valid @RequestBody CheckEmailCodeDto checkEmailCodeDto) {
-        String deviceId = emailVerifyService.checkVerifyCode(checkEmailCodeDto.email(), checkEmailCodeDto.code());
+    public Response checkEmailCode(@RequestParam VerifyType type,
+                                   @Valid @RequestBody CheckEmailCodeDto checkEmailCodeDto) {
+        String deviceId = emailVerifyService.checkVerifyCode(type, checkEmailCodeDto.email(), checkEmailCodeDto.code());
 
         return Response.success(deviceId);
     }
