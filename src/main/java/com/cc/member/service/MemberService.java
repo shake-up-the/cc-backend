@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -57,7 +58,7 @@ public class MemberService {
         Member member = memberRepository.findByCustomId(customId)
                 .orElseThrow(MemberNotFoundException::new);
 
-        redisTemplate.opsForValue().set("refresh-token:" + member.getCustomId(), tokenInfo.refreshToken(), 14, TimeUnit.DAYS);
+        redisTemplate.opsForValue().set("refresh-token:%s".formatted(member.getCustomId()), tokenInfo.refreshToken(), 14, TimeUnit.DAYS);
 
         return tokenInfo;
     }
@@ -104,6 +105,27 @@ public class MemberService {
         member.changePassword(passwordEncoder.encode(password));
 
         return password;
+    }
+
+    @Transactional
+    public TokenInfo reissueToken(String accessToken, String refreshToken) {
+        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+
+        Member member = memberRepository.findByCustomId(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+
+        if(!jwtTokenProvider.isValidToken(refreshToken)) {
+            throw new InvalidTokenException();
+        }
+
+        String storeRefreshToken = Optional.ofNullable(redisTemplate.opsForValue().get("refresh-token:%s".formatted(member.getCustomId()))).orElseThrow(InvalidTokenException::new);
+        if (!storeRefreshToken.equals(refreshToken)) {
+            throw new InvalidTokenException();
+        }
+
+        TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
+        redisTemplate.opsForValue().set("refresh-token:%s".formatted(member.getCustomId()), tokenInfo.refreshToken(), 14, TimeUnit.DAYS);
+
+        return tokenInfo;
     }
 
 }

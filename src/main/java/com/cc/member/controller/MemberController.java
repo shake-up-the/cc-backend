@@ -86,4 +86,12 @@ public class MemberController {
 
         return Response.success(password);
     }
+
+    @Operation(summary = "토큰 재발급")
+    @PostMapping("/reissue-token")
+    public Response reissueToken(@RequestBody ReissueTokenDto reissueTokenDto) {
+        TokenInfo tokenInfo = memberService.reissueToken(reissueTokenDto.accessToken(), reissueTokenDto.refreshToken());
+
+        return Response.success(tokenInfo);
+    }
 }
