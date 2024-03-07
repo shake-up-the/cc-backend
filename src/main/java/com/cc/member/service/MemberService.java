@@ -55,10 +55,8 @@ public class MemberService {
                         .authenticate(authenticationToken);
 
         TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
-        Member member = memberRepository.findByCustomId(customId)
-                .orElseThrow(MemberNotFoundException::new);
 
-        redisTemplate.opsForValue().set("refresh-token:%s".formatted(member.getCustomId()), tokenInfo.refreshToken(), 14, TimeUnit.DAYS);
+        redisTemplate.opsForValue().set("refresh-token:%s".formatted(customId), tokenInfo.refreshToken(), 14, TimeUnit.DAYS);
 
         return tokenInfo;
     }
