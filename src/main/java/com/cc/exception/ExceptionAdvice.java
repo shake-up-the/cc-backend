@@ -93,4 +93,25 @@ public class ExceptionAdvice {
         log.info("e = {}", e.getMessage());
         return Response.failure(-1011, "잘못된 회원 정보입니다.");
     }
+
+    @ExceptionHandler(ChatRoomNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response chatRoomNotFoundException(ChatRoomNotFoundException e) {
+        log.info("e = {}", e.getMessage());
+        return Response.failure(-2001, "채팅방을 찾을 수 없습니다.");
+    }
+
+    @ExceptionHandler(AlreadyInChatRoomException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public Response alreadyInChatRoomException(AlreadyInChatRoomException e) {
+        log.info("e = {}", e.getMessage());
+        return Response.failure(-2002, "이미 채팅방에 참여 중입니다.");
+    }
+
+    @ExceptionHandler(MaximumMemberReachedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response maximumMemberReachedException(MaximumMemberReachedException e) {
+        log.info("e = {}", e.getMessage());
+        return Response.failure(-2003, "채팅방 인원이 가득 찼습니다.");
+    }
 }
