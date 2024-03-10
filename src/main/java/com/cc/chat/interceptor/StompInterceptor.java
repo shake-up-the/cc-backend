@@ -3,6 +3,7 @@ package com.cc.chat.interceptor;
 import com.cc.auth.JwtTokenProvider;
 import com.cc.exception.InvalidTokenException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.messaging.Message;
@@ -31,6 +32,19 @@ public class StompInterceptor implements ChannelInterceptor {
                 throw new InvalidTokenException();
             }
         }
+        // 테스트 환경에서 subscribe header 에 값을 줄 수가 없어 주석 처리
+//        else if (StompCommand.SUBSCRIBE == accessor.getCommand()) {
+//            String token = resolveToken(accessor);
+//
+//            if(token == null || !jwtTokenProvider.isValidToken(token)) {
+//                throw new InvalidTokenException();
+//            } else {
+//                String SubscribeDestination = accessor.getDestination();
+//                String roomId = SubscribeDestination.split("/")[3];
+//                // TODO: Check if user is allowed to subscribe to this room
+//            }
+//        }
+
         return message;
     }
 

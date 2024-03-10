@@ -1,7 +1,9 @@
 package com.cc.chat.controller;
 
 import com.cc.auth.JwtTokenProvider;
+import com.cc.chat.domain.Chat;
 import com.cc.chat.dto.ChatDto;
+import com.cc.chat.repository.ChatRepository;
 import com.cc.exception.MemberNotFoundException;
 import com.cc.member.domain.Member;
 import com.cc.member.repository.MemberRepository;
@@ -12,6 +14,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -20,6 +24,7 @@ public class ChatController {
     private final SimpMessageSendingOperations template;
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
+    private final ChatRepository chatRepository;
 
     @MessageMapping(value = "/test")
     public void test(){
@@ -33,6 +38,12 @@ public class ChatController {
         chat.setType(ChatDto.MessageType.JOIN);
         chat.setSender(memberId);
         chat.setMessage(member.getName() + "님이 입장하셨습니다.");
+        chatRepository.save(Chat.builder()
+                .roomId(chat.getRoomId())
+                .sender(chat.getSender())
+                .message(chat.getMessage())
+                .createdAt(LocalDateTime.now())
+                .build());
         template.convertAndSend("/sub/room/" + chat.getRoomId(), chat);
     }
 
@@ -43,6 +54,12 @@ public class ChatController {
         chat.setType(ChatDto.MessageType.EXIT);
         chat.setSender(memberId);
         chat.setMessage(member.getName() + "님이 퇴장하셨습니다.");
+        chatRepository.save(Chat.builder()
+                .roomId(chat.getRoomId())
+                .sender(chat.getSender())
+                .message(chat.getMessage())
+                .createdAt(LocalDateTime.now())
+                .build());
         template.convertAndSend("/sub/room/" + chat.getRoomId(), chat);
     }
 
@@ -51,6 +68,12 @@ public class ChatController {
         String memberId = jwtTokenProvider.getSubjectFromHeader(Authorization);
         chat.setType(ChatDto.MessageType.TALK);
         chat.setSender(memberId);
+        chatRepository.save(Chat.builder()
+                .roomId(chat.getRoomId())
+                .sender(chat.getSender())
+                .message(chat.getMessage())
+                .createdAt(LocalDateTime.now())
+                .build());
         template.convertAndSend("/sub/room/" + chat.getRoomId(), chat);
     }
 }
