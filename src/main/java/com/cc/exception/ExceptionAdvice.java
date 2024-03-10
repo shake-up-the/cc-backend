@@ -114,4 +114,11 @@ public class ExceptionAdvice {
         log.info("e = {}", e.getMessage());
         return Response.failure(-2003, "채팅방 인원이 가득 찼습니다.");
     }
+
+    @ExceptionHandler(NotInChatRoomException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response notInChatRoomException(NotInChatRoomException e) {
+        log.info("e = {}", e.getMessage());
+        return Response.failure(-2004, "채팅방에 참여 중이 아닙니다.");
+    }
 }

@@ -28,7 +28,7 @@ public class ChatRoom {
     @Column(nullable = false)
     private int memberNum;
 
-    private LocalDateTime meetingDate;
+    private String meetingDate;
 
     private String meetingPlace;
 
