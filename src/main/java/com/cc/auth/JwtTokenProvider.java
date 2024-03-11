@@ -86,7 +86,7 @@ public class JwtTokenProvider {
         return true;
     }
 
-    private Claims parseClaims(String accessToken) {
+    public Claims parseClaims(String accessToken) {
         try {
             return Jwts.parserBuilder().setSigningKey(key).build()
                     .parseClaimsJws(accessToken)
@@ -94,5 +94,10 @@ public class JwtTokenProvider {
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
+    }
+
+    public String getSubjectFromHeader(String authroizationHeader) {
+        String token = authroizationHeader.substring(7);
+        return parseClaims(token).getSubject();
     }
 }

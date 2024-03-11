@@ -1,5 +1,8 @@
 package com.cc.auth;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.Random;
 
 public class SecurityUtil {
@@ -21,4 +24,8 @@ public class SecurityUtil {
         return password.toString();
     }
 
+    public static String getLoginId() {
+        UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return user.getUsername();
+    }
 }

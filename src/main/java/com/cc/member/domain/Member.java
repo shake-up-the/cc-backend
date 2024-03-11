@@ -1,5 +1,6 @@
 package com.cc.member.domain;
 
+import com.cc.chat.domain.ChatRoomMember;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,9 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -50,7 +49,7 @@ public class Member implements UserDetails {
     @Column(nullable = false, length = 8)
     private String birth;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
@@ -59,6 +58,10 @@ public class Member implements UserDetails {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ChatRoomMember> chatRooms = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -94,5 +97,9 @@ public class Member implements UserDetails {
 
     public void changePassword(String password) {
         this.password = password;
+    }
+
+    public void addChatRoom(ChatRoomMember chatRoomMember) {
+        this.chatRooms.add(chatRoomMember);
     }
 }

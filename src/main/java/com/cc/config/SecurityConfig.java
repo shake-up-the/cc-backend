@@ -37,7 +37,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/members/**").permitAll()
                         .requestMatchers("/api/**").hasAnyRole("USER")
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll())
                 .addFilter(corsConfig.corsFilter())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
