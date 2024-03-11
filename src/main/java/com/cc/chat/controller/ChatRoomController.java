@@ -1,6 +1,7 @@
 package com.cc.chat.controller;
 
 import com.cc.chat.dto.ChatInfoDto;
+import com.cc.chat.dto.ChatRoomDto;
 import com.cc.chat.dto.ChatRoomInfoDto;
 import com.cc.chat.dto.CreateChatRoomDto;
 import com.cc.chat.service.ChatRoomService;
@@ -27,6 +28,15 @@ public class ChatRoomController {
     public Response createChatRoom(@Valid @RequestBody CreateChatRoomDto createChatRoomDto) {
         String chatRoomId = chatRoomService.createChatRoom(createChatRoomDto.area(), createChatRoomDto.memberNum());
         return Response.success(chatRoomId);
+    }
+
+    @Operation(summary = "미팅방(채팅방) 목록 불러오기")
+    @GetMapping("/list")
+    public Response getChatRoomList(@RequestParam(defaultValue = "0") int page,
+                                    @RequestParam(defaultValue = "10") int size,
+                                    @RequestParam(defaultValue = "recent") String sortField) {
+        Page<ChatRoomDto> chatRoomPage = chatRoomService.getChatRoomList(page, size, sortField);
+        return Response.success(chatRoomPage);
     }
 
     @Operation(summary = "미팅방(채팅방)에 참여하기")

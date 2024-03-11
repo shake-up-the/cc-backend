@@ -4,6 +4,7 @@ import com.cc.auth.SecurityUtil;
 import com.cc.chat.domain.ChatRoom;
 import com.cc.chat.domain.ChatRoomMember;
 import com.cc.chat.dto.ChatInfoDto;
+import com.cc.chat.dto.ChatRoomDto;
 import com.cc.chat.dto.ChatRoomInfoDto;
 import com.cc.chat.repository.ChatRepository;
 import com.cc.chat.repository.ChatRoomMemberRepository;
@@ -62,6 +63,11 @@ public class ChatRoomService {
         ChatRoomMember chatRoomMember = chatRoomMemberRepository.save(new ChatRoomMember(chatRoom, member));
         member.addChatRoom(chatRoomMember);
         chatRoom.addMember(chatRoomMember);
+    }
+
+    public Page<ChatRoomDto> getChatRoomList(int page, int size, String sortField) {
+        Page<ChatRoom> chatRoomPage = chatRoomRepository.findByOrderByCreatedAtDesc(PageRequest.of(page, size));
+        return chatRoomPage.map(chatRoom -> new ChatRoomDto(chatRoom, chatRoom.getMembers()));
     }
 
     public ChatRoomInfoDto getChatRoomInfo(String roomId) {
