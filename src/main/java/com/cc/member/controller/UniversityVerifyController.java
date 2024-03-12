@@ -32,4 +32,12 @@ public class UniversityVerifyController {
         universityVerifyService.requestUniversityVerify(universityName, major, admissionYear, verifyImage);
         return Response.success();
     }
+
+    @Operation(summary = "대학 인증 요청 승인")
+    @PostMapping(value = "admin/university-verify/approve")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Response approveUniversityVerify(@Schema(description = "대학 인증 요청 ID", example = "1") @RequestParam(value = "universityVerifyId") Long universityVerifyId) {
+        universityVerifyService.approveUniversityVerify(universityVerifyId);
+        return Response.success();
+    }
 }
