@@ -31,4 +31,10 @@ public class MeetingProfileController {
         return Response.success();
     }
 
+    @Operation(summary = "내 미팅 프로필 조회하기")
+    @GetMapping("/get")
+    public Response getMyMeetingProfile() {
+        MeetingProfileDto meetingProfileDto = meetingProfileService.getMyMeetingProfile();
+        return Response.success(meetingProfileDto);
+    }
 }

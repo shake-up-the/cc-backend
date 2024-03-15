@@ -6,6 +6,7 @@ import com.cc.member.domain.DrinkingCapacity;
 import com.cc.member.domain.MBTI;
 import com.cc.member.domain.MeetingProfile;
 import com.cc.member.domain.Member;
+import com.cc.member.dto.MeetingProfileDto;
 import com.cc.member.repository.MeetingProfileRepository;
 import com.cc.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
@@ -47,5 +48,13 @@ public class MeetingProfileService {
         meetingProfile.setDrinkingCapacity(drinkingCapacity);
         meetingProfile.setIdealType(idealType);
         meetingProfile.setIntroduction(introduction);
+    }
+
+    public MeetingProfileDto getMyMeetingProfile() {
+        Member member = memberRepository.findByCustomId(SecurityUtil.getLoginId())
+                .orElseThrow(MemberNotFoundException::new);
+
+        MeetingProfile meetingProfile = member.getMeetingProfile();
+        return new MeetingProfileDto(meetingProfile.getMbti(), meetingProfile.getDrinkingCapacity(), meetingProfile.getIdealType(), meetingProfile.getIntroduction());
     }
 }
