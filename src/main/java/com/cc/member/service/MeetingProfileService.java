@@ -57,4 +57,12 @@ public class MeetingProfileService {
         MeetingProfile meetingProfile = member.getMeetingProfile();
         return new MeetingProfileDto(meetingProfile.getMbti(), meetingProfile.getDrinkingCapacity(), meetingProfile.getIdealType(), meetingProfile.getIntroduction());
     }
+
+    public MeetingProfileDto getMeetingProfile(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+
+        MeetingProfile meetingProfile = member.getMeetingProfile();
+        return new MeetingProfileDto(meetingProfile.getMbti(), meetingProfile.getDrinkingCapacity(), meetingProfile.getIdealType(), meetingProfile.getIntroduction());
+    }
 }

@@ -37,4 +37,11 @@ public class MeetingProfileController {
         MeetingProfileDto meetingProfileDto = meetingProfileService.getMyMeetingProfile();
         return Response.success(meetingProfileDto);
     }
+
+    @Operation(summary = "미팅 프로필 조회하기")
+    @GetMapping("/get/{memberId}")
+    public Response getMeetingProfile(@PathVariable Long memberId) {
+        MeetingProfileDto meetingProfileDto = meetingProfileService.getMeetingProfile(memberId);
+        return Response.success(meetingProfileDto);
+    }
 }
