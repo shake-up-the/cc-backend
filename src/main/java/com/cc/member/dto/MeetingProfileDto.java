@@ -8,7 +8,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record CreateMeetingProfileDto (
+public record MeetingProfileDto(
 
         @Schema(description = "MBTI", example = "INFP")
         @Enumerated(EnumType.STRING)

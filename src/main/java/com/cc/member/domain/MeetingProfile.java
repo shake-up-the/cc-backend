@@ -28,4 +28,20 @@ public class MeetingProfile {
 
     @Column(nullable = false, length = 100)
     private String introduction;
+
+    public void setMbti(MBTI mbti) {
+        this.mbti = mbti;
+    }
+
+    public void setDrinkingCapacity(DrinkingCapacity drinkingCapacity) {
+        this.drinkingCapacity = drinkingCapacity;
+    }
+
+    public void setIdealType(String idealType) {
+        this.idealType = idealType;
+    }
+
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
 }

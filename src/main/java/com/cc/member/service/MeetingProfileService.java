@@ -36,4 +36,16 @@ public class MeetingProfileService {
 
         member.setMeetingProfile(meetingProfile);
     }
+
+    @Transactional
+    public void updateMeetingProfile(MBTI mbti, DrinkingCapacity drinkingCapacity, String idealType, String introduction) {
+        Member member = memberRepository.findByCustomId(SecurityUtil.getLoginId())
+                .orElseThrow(MemberNotFoundException::new);
+
+        MeetingProfile meetingProfile = member.getMeetingProfile();
+        meetingProfile.setMbti(mbti);
+        meetingProfile.setDrinkingCapacity(drinkingCapacity);
+        meetingProfile.setIdealType(idealType);
+        meetingProfile.setIntroduction(introduction);
+    }
 }

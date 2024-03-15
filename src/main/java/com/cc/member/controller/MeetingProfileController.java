@@ -1,16 +1,13 @@
 package com.cc.member.controller;
 
-import com.cc.member.dto.CreateMeetingProfileDto;
+import com.cc.member.dto.MeetingProfileDto;
 import com.cc.member.service.MeetingProfileService;
 import com.cc.response.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "meeting-profile", description = "미팅 프로필 API")
 @RestController
@@ -22,8 +19,15 @@ public class MeetingProfileController {
 
     @Operation(summary = "미팅 프로필 만들기")
     @PostMapping("/create")
-    public Response createMeetingProfile(@Valid @RequestBody CreateMeetingProfileDto createMeetingProfileDto) {
-        meetingProfileService.createMeetingProfile(createMeetingProfileDto.mbti(), createMeetingProfileDto.drinkingCapacity(), createMeetingProfileDto.idealType(), createMeetingProfileDto.introduction());
+    public Response createMeetingProfile(@Valid @RequestBody MeetingProfileDto meetingProfileDto) {
+        meetingProfileService.createMeetingProfile(meetingProfileDto.mbti(), meetingProfileDto.drinkingCapacity(), meetingProfileDto.idealType(), meetingProfileDto.introduction());
+        return Response.success();
+    }
+
+    @Operation(summary = "미팅 프로필 수정하기")
+    @PutMapping("/update")
+    public Response updateMeetingProfile(@Valid @RequestBody MeetingProfileDto meetingProfileDto) {
+        meetingProfileService.updateMeetingProfile(meetingProfileDto.mbti(), meetingProfileDto.drinkingCapacity(), meetingProfileDto.idealType(), meetingProfileDto.introduction());
         return Response.success();
     }
 
