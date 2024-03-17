@@ -49,6 +49,14 @@ public class Member implements UserDetails {
     @Column(nullable = false, length = 8)
     private String birth;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "university_id")
+    private University university;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "meeting_profile_id")
+    private MeetingProfile meetingProfile;
+
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
@@ -101,5 +109,17 @@ public class Member implements UserDetails {
 
     public void addChatRoom(ChatRoomMember chatRoomMember) {
         this.chatRooms.add(chatRoomMember);
+    }
+
+    public void setUniversity(University university) {
+        this.university = university;
+    }
+
+    public void setMeetingProfile(MeetingProfile meetingProfile) {
+        this.meetingProfile = meetingProfile;
+    }
+
+    public void addRole(String role) {
+        this.roles.add(role);
     }
 }

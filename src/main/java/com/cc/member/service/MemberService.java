@@ -6,6 +6,7 @@ import com.cc.auth.TokenInfo;
 import com.cc.exception.*;
 import com.cc.member.domain.Gender;
 import com.cc.member.domain.Member;
+import com.cc.member.dto.MyInfoDto;
 import com.cc.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -124,6 +125,13 @@ public class MemberService {
         redisTemplate.opsForValue().set("refresh-token:%s".formatted(member.getCustomId()), tokenInfo.refreshToken(), 14, TimeUnit.DAYS);
 
         return tokenInfo;
+    }
+
+    public MyInfoDto getMyInfo() {
+        Member member = memberRepository.findByCustomId(SecurityUtil.getLoginId())
+                .orElseThrow(MemberNotFoundException::new);
+
+        return new MyInfoDto(member);
     }
 
 }

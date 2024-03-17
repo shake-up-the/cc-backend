@@ -94,4 +94,12 @@ public class MemberController {
 
         return Response.success(tokenInfo);
     }
+
+    @Operation(summary = "나의 회원 정보 조회하기")
+    @GetMapping("/my-info")
+    public Response getMyInfo() {
+        MyInfoDto myInfoDto = memberService.getMyInfo();
+
+        return Response.success(myInfoDto);
+    }
 }
