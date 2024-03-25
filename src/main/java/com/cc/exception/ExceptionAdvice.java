@@ -121,4 +121,18 @@ public class ExceptionAdvice {
         log.info("e = {}", e.getMessage());
         return Response.failure(-2004, "채팅방에 참여 중이 아닙니다.");
     }
+
+    @ExceptionHandler(CategoryTitleAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public Response categoryTitleAlreadyExistsException(CategoryTitleAlreadyExistsException e) {
+        log.info("e = {}", e.getMessage());
+        return Response.failure(-3001, "이미 사용 중인 카테고리명입니다.");
+    }
+
+    @ExceptionHandler(CategoryNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response categoryNotFoundException(CategoryNotFoundException e) {
+        log.info("e = {}", e.getMessage());
+        return Response.failure(-3002, "카테고리를 찾을 수 없습니다.");
+    }
 }
