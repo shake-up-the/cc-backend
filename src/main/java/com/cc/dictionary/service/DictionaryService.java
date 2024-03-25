@@ -7,6 +7,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class DictionaryService {
@@ -19,5 +21,9 @@ public class DictionaryService {
             throw new CategoryTitleAlreadyExistsException();
         }
         dictionaryCategoryRepository.save(DictionaryCategory.builder().title(title).build());
+    }
+
+    public List<DictionaryCategory> getDictionaryCategory() {
+        return dictionaryCategoryRepository.findAll();
     }
 }

@@ -7,10 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "dictionary", description = "사전방 API")
 @RestController
@@ -25,5 +22,11 @@ public class DictionaryController {
     public Response addDictionaryCategory(@Valid @RequestBody AddDictionaryCategoryDto addDictionaryCategoryDto) {
         dictionaryService.addDictionaryCategory(addDictionaryCategoryDto.title());
         return Response.success();
+    }
+
+    @Operation(summary = "사전 카테고리 가져오기")
+    @GetMapping("/get-category")
+    public Response getDictionaryCategory() {
+        return Response.success(dictionaryService.getDictionaryCategory());
     }
 }
