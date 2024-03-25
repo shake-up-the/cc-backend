@@ -1,6 +1,7 @@
 package com.cc.dictionary.controller;
 
 import com.cc.dictionary.dto.AddDictionaryCategoryDto;
+import com.cc.dictionary.dto.AddDictionaryPostDto;
 import com.cc.dictionary.service.DictionaryService;
 import com.cc.response.Response;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,5 +29,13 @@ public class DictionaryController {
     @GetMapping("/get-category")
     public Response getDictionaryCategory() {
         return Response.success(dictionaryService.getDictionaryCategory());
+    }
+
+    @Operation(summary = "카테고리 글 작성하기")
+    @PostMapping("/create-post/{categoryId}")
+    public Response addDictionaryPost(@PathVariable Long categoryId,
+                                      @Valid @RequestBody AddDictionaryPostDto addDictionaryPostDto) {
+        dictionaryService.addDictionaryPost(categoryId, addDictionaryPostDto.title(), addDictionaryPostDto.content());
+        return Response.success();
     }
 }
