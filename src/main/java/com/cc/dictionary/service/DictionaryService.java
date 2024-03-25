@@ -3,6 +3,8 @@ package com.cc.dictionary.service;
 import com.cc.auth.SecurityUtil;
 import com.cc.dictionary.domain.DictionaryCategory;
 import com.cc.dictionary.domain.DictionaryPost;
+import com.cc.dictionary.dto.GetDictionaryCategoryDto;
+import com.cc.dictionary.dto.GetDictionaryPostDto;
 import com.cc.dictionary.repository.DictionaryCategoryRepository;
 import com.cc.dictionary.repository.DictionaryPostRepository;
 import com.cc.exception.CategoryNotFoundException;
@@ -32,8 +34,11 @@ public class DictionaryService {
         dictionaryCategoryRepository.save(DictionaryCategory.builder().title(title).build());
     }
 
-    public List<DictionaryCategory> getDictionaryCategory() {
-        return dictionaryCategoryRepository.findAll();
+    public List<GetDictionaryCategoryDto> getDictionaryCategory() {
+        return dictionaryCategoryRepository.findAll()
+                .stream()
+                .map(x -> new GetDictionaryCategoryDto(x.getId(), x.getTitle()))
+                .toList();
     }
 
     @Transactional
@@ -50,5 +55,12 @@ public class DictionaryService {
                 .content(content)
                 .build();
         dictionaryPostRepository.save(dictionaryPost);
+    }
+
+    public List<GetDictionaryPostDto> getDictionaryPost(Long categoryId) {
+        return dictionaryPostRepository.findByCategoryId(categoryId)
+                .stream()
+                .map(x -> new GetDictionaryPostDto(x.getId(), x.getTitle(), x.getContent()))
+                .toList();
     }
 }

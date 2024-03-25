@@ -38,4 +38,10 @@ public class DictionaryController {
         dictionaryService.addDictionaryPost(categoryId, addDictionaryPostDto.title(), addDictionaryPostDto.content());
         return Response.success();
     }
+
+    @Operation(summary = "카테고리 글 가져오기")
+    @GetMapping("/get-post/{categoryId}")
+    public Response getDictionaryPost(@PathVariable Long categoryId) {
+        return Response.success(dictionaryService.getDictionaryPost(categoryId));
+    }
 }
